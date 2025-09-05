@@ -10,3 +10,40 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Sathya-1307/Dictionary-System.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('dict') { // replace 'dict' with your React project folder
+                    // Use direct path to Node.js installed on Windows
+                    bat '"C:\\Program Files\\nodejs\\npm.cmd" install'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('dict') {
+                    bat '"C:\\Program Files\\nodejs\\npm.cmd" run build'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "React project built successfully!"
+        }
+        failure {
+            echo "Build failed!"
+        }
+    }
+}
